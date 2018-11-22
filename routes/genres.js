@@ -1,6 +1,15 @@
+const mongoose = require('mongoose');
 const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
+
+mongoose
+  .connect(
+    'mongodb://localhost/vidly',
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Failed to connect MongoDB...'));
 
 const genres = [
   { id: 1, name: 'Comedy' },
