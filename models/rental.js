@@ -4,20 +4,8 @@ const mongoose = require('mongoose');
 const Rental = mongoose.model(
   'Rental',
   new mongoose.Schema({
-    dateOut: {
-      type: Date,
-      required: true,
-      default: Date.now
-    },
-    dateReturned: {
-      type: Date
-    },
     customer: {
       type: new mongoose.Schema({
-        _id: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true
-        },
         name: {
           type: String,
           required: true,
@@ -26,7 +14,6 @@ const Rental = mongoose.model(
         },
         isGold: {
           type: Boolean,
-          required: true,
           default: false
         },
         phone: {
@@ -40,10 +27,6 @@ const Rental = mongoose.model(
     },
     movie: {
       type: new mongoose.Schema({
-        _id: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true
-        },
         title: {
           type: String,
           required: true,
@@ -54,10 +37,23 @@ const Rental = mongoose.model(
         dailyRentalRate: {
           type: Number,
           required: true,
-          min: 0
+          min: 0,
+          max: 255
         }
       }),
       required: true
+    },
+    dateOut: {
+      type: Date,
+      required: true,
+      default: Date.now
+    },
+    dateReturned: {
+      type: Date
+    },
+    rentalFee: {
+      type: Number,
+      min: 0
     }
   })
 );
