@@ -17,7 +17,10 @@ router.post('/', async (req, res) => {
 
   await user.save();
 
-  res.send(user);
+  res.send({
+    name: user.name,
+    email: user.email
+  });
 });
 
 module.exports = router;
