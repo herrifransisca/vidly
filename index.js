@@ -15,7 +15,8 @@ const auth = require('./routes/auth');
 const express = require('express');
 const app = express();
 
-winston.add(winston.transports.File, { filename: 'logfile.log' });
+// winston.add(winston.transports.File, { filename: 'logfile.log' }); // winston v2.4.4
+winston.add(new winston.transports.File({ filename: 'logfile.log' })); // winston v3.1.0
 
 if (!config.get('jwtPrivateKey')) {
   console.log('FATAL ERROR: jwtPrivateKey is not defined.');
