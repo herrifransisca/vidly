@@ -16,11 +16,17 @@ const auth = require('./routes/auth');
 const express = require('express');
 const app = express();
 
-process.on('uncaughtException', ex => {
-  console.log('WE GOT AN UNCAUGHT EXCEPTION');
-  winston.error(ex.message, ex);
-  process.exit(1);
-});
+// way #1 for "uncaught exception"
+// process.on('uncaughtException', ex => {
+//   console.log('WE GOT AN UNCAUGHT EXCEPTION');
+//   winston.error(ex.message, ex);
+//   process.exit(1);
+// });
+
+// way #2 for "uncaught exception"
+winston.handleExceptions(
+  new winston.transports.File({ filename: 'uncaughtExceptions.log' })
+);
 
 process.on('unhandledRejection', ex => {
   console.log('WE GOT AN UNHANDLED REJECTION');
@@ -31,11 +37,11 @@ process.on('unhandledRejection', ex => {
 winston.add(winston.transports.File, { filename: 'logfile.log' });
 winston.add(winston.transports.MongoDB, { db: 'mongodb://localhost/vidly' });
 
-// throw new Error('Something failed during startup.');   // for uncaught exception
+throw new Error('Something failed during startup.'); // for uncaught exception
 
-const p = Promise.reject(new Error('Something failed miserably!'));
-// p.then().catch()
-p.then(() => console.log('Done')); // -> will have unhandled promise rejection
+// const p = Promise.reject(new Error('Something failed miserably!'));
+// // p.then().catch()
+// p.then(() => console.log('Done')); // -> will have unhandled promise rejection
 
 if (!config.get('jwtPrivateKey')) {
   console.log('FATAL ERROR: jwtPrivateKey is not defined.');
