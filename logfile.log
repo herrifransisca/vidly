@@ -8,3 +8,5 @@
 {"level":"info","message":"Connected to mongodb://localhost/vidly...","timestamp":"2018-12-04T11:54:38.678Z"}
 {"level":"info","message":"Listening on port 3000...","timestamp":"2018-12-04T11:55:03.872Z"}
 {"level":"info","message":"Connected to mongodb://localhost/vidly_tests...","timestamp":"2018-12-04T11:55:03.956Z"}
+{"level":"info","message":"Listening on port 3000...","timestamp":"2018-12-04T13:24:07.505Z"}
+{"level":"info","message":"Connected to mongodb://localhost/vidly_tests...","timestamp":"2018-12-04T13:24:07.587Z"}
