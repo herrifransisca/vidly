@@ -190,29 +190,24 @@ describe('/api/genres', () => {
 
   describe('DELETE /:id', () => {
     let token;
+    let genre;
     let id;
 
     const exec = () => {
       return request(server)
         .delete('/api/genres/' + id)
-        .set('x-auth-token', token);
+        .set('x-auth-token', token)
+        .send();
     };
 
-    beforeEach(() => {
-      token = new User({ isAdmin: true }).generateAuthToken();
-      id = '1';
-    });
-
-    it('should return a genre if valid id is passed', async () => {
-      const genre = new Genre({ name: 'genre1' });
+    beforeEach(async () => {
+      // Before each test we need to create a genre and
+      // put it in the database.
+      genre = new Genre({ name: 'genre1' });
       await genre.save();
 
       id = genre._id;
-
-      const res = await exec();
-
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('name', 'genre1');
+      token = new User({ isAdmin: true }).generateAuthToken();
     });
 
     it('should return 401 if client is not logged in', async () => {
@@ -223,7 +218,7 @@ describe('/api/genres', () => {
       expect(res.status).toBe(401);
     });
 
-    it('should return 403 if client is not admin', async () => {
+    it('should return 403 if the user is not an admin', async () => {
       token = new User({ isAdmin: false }).generateAuthToken();
 
       const res = await exec();
@@ -231,18 +226,35 @@ describe('/api/genres', () => {
       expect(res.status).toBe(403);
     });
 
-    it('should return 404 if invalid id is passed', async () => {
+    it('should return 404 if id is invalid', async () => {
+      id = 1;
+
       const res = await exec();
 
       expect(res.status).toBe(404);
     });
 
-    it('should return 404 if genre was not found with the given id', async () => {
+    it('should return 404 if no genre with the given id was found', async () => {
       id = mongoose.Types.ObjectId();
 
       const res = await exec();
 
       expect(res.status).toBe(404);
+    });
+
+    it('should delete the genre if input is valid', async () => {
+      await exec();
+
+      const genreInDb = await Genre.findById(id);
+
+      expect(genreInDb).toBeNull();
+    });
+
+    it('should return the removed genre', async () => {
+      const res = await exec();
+
+      expect(res.body).toHaveProperty('_id', genre._id.toHexString());
+      expect(res.body).toHaveProperty('name', genre.name);
     });
   });
 });
